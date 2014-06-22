@@ -21,7 +21,6 @@ list(set = set, get = get,
 ## Here, the function would determine how R read the cached for the answer and
 ## what to print if it is not there
 ## Return a matrix that is the inverse of 'x'
-
 cacheSolve <- function(a, ...) {
 	x <- a$getmatrix()
 	if(!is.null(x)){
