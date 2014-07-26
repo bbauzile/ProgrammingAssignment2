@@ -1,36 +1,54 @@
-## Function here would calculate the inverse of a matrix by trying to get the
-## the cached result first if available. If not it would solve it.
+## this function calculates the inverse of the special matrix
+## it first check if the inverse is in the cached (calculated before)
+## if so it skips the calculation (cacheSolve) and the answer from the cached 
+## if not it calculates it and set it in the cached
 
-## This function would calculate the inverse of matrix by first checking to see
-## if it was already been calculated. 
+makeCacheMatrix <- function(mat = matrix()) {
+  inv_mat <- NULL
+  set <- function(y) {
+    mat <<- y
+    inv_mat <<- NULL
+  }
+## here it gets for the matrix
+  get <- function() mat
 
-makeCacheMatrix <- function(a = matrix()){
-	x <- NULL
-	set <- function(y){
-	    a <<- y
-	    x <<- NULL
+## setting the result to the cached
+  setinverse <- function(inverse) inv_mat <<- inverse
+
+## getting the inverse
+  getinverse <- function() inv_mat
+
+## return the matrix with newly defined function
+  list(set = set, get = get,
+       setinverse = setinverse,
+       getinverse = getinverse)
 }
-get <- function() a
-setmatrix <- function(solve) x <<- solve
-getsolve <- function() x
-list(set = set, get = get,
-	 setmatrix = setmatrix,
-	 getmatrix = getmatrix)
+
+## cacheSolve compute the inverse of the matrix created with
+## the makeCacheMatrix function.
+cacheSolve <- function(mat, ...) {
+  inv_mat <- mat$getinverse()
+
+  ## if the inverse is already calculated, it will return it
+  if(!is.null(inv_mat)) {
+    message("getting cached data-inverse of the matrix")
+    return(inv_mat)
+  }
+
+  ## if inv is null, so it compute it
+  else {
+    data <- mat$get()
+    inv_mat <- solve(data)
+
+    ## setting to the cached
+    mat$setinverse(inv_mat)
+
+    ## return it 
+    inv_mat
+  }
 }
-
-## Here, the function would determine how R read the cached for the answer and
-## what to print if it is not there
-## Return a matrix that is the inverse of 'x'
-
-cacheSolve <- function(a, ...) {
-	x <- a$getmatrix()
-	if(!is.null(x)){
-		message("getting cached data")
-		return(x)
-	}
-	data <- a$get()
-	x <- solve(matrix, ...)
-	a$setmatrix(x)
-	x   
-
-}
+# raw_data <- matrix(c(1:4), nrow=2)
+# data <- makeCacheMatrix(raw_data)
+# data$get()
+# cacheSolve(data)
+# cacheSolve(data)
